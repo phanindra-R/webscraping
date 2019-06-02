@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to flipkart scrapper’s documentation! &#8212; flipkart scrapper 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-flipkart-scrapper-s-documentation">
+<h1>Welcome to flipkart scrapper’s documentation!<a class="headerlink" href="#welcome-to-flipkart-scrapper-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This documentation is based on scrapy module in python3.</p>
+<p>In this project we will scrape the data of laptops like name, rating, price from flipkart website.</p>
+<div class="section" id="introduction-scrapy">
+<h2>Introduction: scrapy<a class="headerlink" href="#introduction-scrapy" title="Permalink to this headline">¶</a></h2>
+<p>Scrapy is an application framework for crawling web sites and extracting structured data which can be used for a wide range of useful applications, like data mining, information processing or historical archival.</p>
+</div>
+<div class="section" id="prerequisites">
+<h2>prerequisites:<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>—python3</p>
+<p>—scrapy</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started:<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>To start with build a new project folder in your home directory. Now open this directory in your terminal and enter the command:</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span>$  scrapy startproject tutorial
+</pre></div>
+</div>
+<p>this command creates a directory named tutorial with the following contents:</p>
+<dl>
+<dt>tutorial/</dt><dd><p>scrapy.cfg                          # deploy configuration file</p>
+<dl>
+<dt>tutorial/                           # project’s Python module, you’ll import your code from here</dt><dd><p>__init__.py</p>
+<p>items.py                        # project items definition file</p>
+<p>middlewares.py                  # project middlewares file</p>
+<p>pipelines.py                    # project pipelines file</p>
+<p>settings.py                     # project settings file</p>
+<dl class="simple">
+<dt>spiders/                        # a directory where you’ll later put your spiders</dt><dd><p>__init__.py</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="the-spider-code">
+<h2>The spider code:<a class="headerlink" href="#the-spider-code" title="Permalink to this headline">¶</a></h2>
+<p>Open the spiders folder and create a new python project. copy the following code in it. (the code is self explanatory)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scrapy</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">..items</span> <span class="kn">import</span> <span class="n">FlipcartScrapyItem</span>
+
+<span class="k">class</span> <span class="nc">myspider</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+        <span class="n">page_plus</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;spidy&#39;</span>
+        <span class="n">start_urls</span> <span class="o">=</span> <span class="p">[</span>
+                 <span class="s1">&#39;https://www.flipkart.com/search?q=laptops&amp;otracker=AS_Query_HistoryAutoSuggest_0_0&amp;otracker1=AS_Query_HistoryAutoSuggest_0_0&amp;marketplace=FLIPKART&amp;as-show=on&amp;as=off&amp;as-pos=0&amp;as-type=HISTORY&amp;as-searchtext=laptops&amp;page=1&#39;</span>
+        <span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+                <span class="n">items</span>  <span class="o">=</span> <span class="n">FlipcartScrapyItem</span><span class="p">()</span>
+                <span class="n">box</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s1">&#39;div.bhgxx2.col-12-12&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">entries</span> <span class="ow">in</span> <span class="n">box</span> <span class="p">:</span>
+                        <span class="n">title</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s1">&#39;div._3wU53n::text&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+                        <span class="n">rating</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s1">&#39;div.hGSR34::text&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+                        <span class="n">price</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s1">&#39;div._1vC4OE._2rQ-NK::text&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+
+                        <span class="n">items</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+                        <span class="n">items</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rating</span>
+                        <span class="n">items</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">price</span>
+
+                        <span class="k">yield</span>  <span class="n">items</span>
+
+                <span class="n">next_page</span> <span class="o">=</span> <span class="s1">&#39;https://www.flipkart.com/search?q=laptops&amp;otracker=AS_Query_HistoryAutoSuggest_0_0&amp;otracker1=AS_Query_HistoryAutoSuggest_0_0&amp;marketplace=FLIPKART&amp;as-show=on&amp;as=off&amp;as-pos=0&amp;as-type=HISTORY&amp;as-searchtext=laptops&amp;page=&quot; + str(myspider.page_plus) + &quot;&#39;</span>
+                <span class="k">if</span> <span class="n">myspider</span><span class="o">.</span><span class="n">page_plus</span> <span class="o">&lt;=</span> <span class="mi">11</span><span class="p">:</span>
+                        <span class="n">myspider</span><span class="o">.</span><span class="n">page_plus</span> <span class="o">+=</span><span class="mi">1</span>
+                        <span class="k">yield</span> <span class="n">response</span><span class="o">.</span><span class="n">follow</span><span class="p">(</span><span class="n">next_page</span><span class="p">,</span><span class="n">callback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="items-py">
+<h2>Items.py:<a class="headerlink" href="#items-py" title="Permalink to this headline">¶</a></h2>
+<p>Now open the items.py file and create the following objects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Define here the models for your scraped items</span>
+<span class="c1">#</span>
+<span class="c1"># See documentation in:</span>
+<span class="c1"># https://doc.scrapy.org/en/latest/topics/items.html</span>
+
+<span class="kn">import</span> <span class="nn">scrapy</span>
+
+
+<span class="k">class</span> <span class="nc">FlipcartScrapyItem</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Item</span><span class="p">):</span>
+    <span class="c1"># define the fields for your item here like:</span>
+    <span class="c1"># name = scrapy.Field()</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+        <span class="n">rating</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+        <span class="n">price</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="spider-crawling">
+<h2>Spider crawling:<a class="headerlink" href="#spider-crawling" title="Permalink to this headline">¶</a></h2>
+<p>open your root directory in terminal and enter the following command:</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span> $  scrapy crawl spidy -o result.pickle
+
+(spidy is the name we have given to the spider in the spider code)
+</pre></div>
+</div>
+<p>This command creartes a result.pickle file in your root directory.
+you can also use .csv and .json file formats.</p>
+</div>
+<div class="section" id="the-result">
+<h2>The result:<a class="headerlink" href="#the-result" title="Permalink to this headline">¶</a></h2>
+<p>The spider crawled 10 pages and extracted data of around 150 laptops.</p>
+<p>here is the data extracted.</p>
+<img alt="_images/image1.png" src="_images/image1.png" />
+<img alt="_images/image2.png" src="_images/image2.png" />
+<img alt="_images/image3.png" src="_images/image3.png" />
+<img alt="_images/image4.png" src="_images/image4.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The no of laptops to be scraped can be controlled by changing the page no limit in the spider code.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">flipkart scrapper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, phanindra ramineni.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
